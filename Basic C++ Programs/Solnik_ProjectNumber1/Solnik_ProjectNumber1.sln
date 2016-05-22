@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Solnik_ProjectNumber1", "Solnik_ProjectNumber1.vcxproj", "{5920108E-78C9-47E9-B09D-7B5B1F5D6BAA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5920108E-78C9-47E9-B09D-7B5B1F5D6BAA}.Debug|Win32.ActiveCfg = Debug|Win32
+		{5920108E-78C9-47E9-B09D-7B5B1F5D6BAA}.Debug|Win32.Build.0 = Debug|Win32
+		{5920108E-78C9-47E9-B09D-7B5B1F5D6BAA}.Release|Win32.ActiveCfg = Release|Win32
+		{5920108E-78C9-47E9-B09D-7B5B1F5D6BAA}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "andSigns", "andSigns.vcxproj", "{C1F63273-9598-48CB-B800-9CE21A452C8A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C1F63273-9598-48CB-B800-9CE21A452C8A}.Debug|Win32.ActiveCfg = Debug|Win32
+		{C1F63273-9598-48CB-B800-9CE21A452C8A}.Debug|Win32.Build.0 = Debug|Win32
+		{C1F63273-9598-48CB-B800-9CE21A452C8A}.Release|Win32.ActiveCfg = Release|Win32
+		{C1F63273-9598-48CB-B800-9CE21A452C8A}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

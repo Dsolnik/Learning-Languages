@@ -1,0 +1,21 @@
+﻿Build started 9/16/2015 1:35:53 PM.
+     1>Project "C:\Users\AM_SOLNIK\Desktop\Solnik_ProjectNumber1\Solnik_ProjectNumber1.vcxproj" on node 2 (build target(s)).
+     1>InitializeBuildStatus:
+         Touching "Debug\Solnik_ProjectNumber1.unsuccessfulbuild".
+       ClCompile:
+         c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt main.cpp
+         main.cpp
+     1>c:\users\am_solnik\desktop\solnik_projectnumber1\main.cpp(6): error C2143: syntax error : missing ';' before '~'
+     1>c:\users\am_solnik\desktop\solnik_projectnumber1\main.cpp(6): error C2171: '~' : illegal on operands of type 'const char [33]'
+     1>c:\users\am_solnik\desktop\solnik_projectnumber1\main.cpp(6): error C2143: syntax error : missing ';' before '~'
+     1>c:\users\am_solnik\desktop\solnik_projectnumber1\main.cpp(6): warning C4552: '~' : operator has no effect; expected operator with side-effect
+     1>c:\users\am_solnik\desktop\solnik_projectnumber1\main.cpp(6): error C2171: '~' : illegal on operands of type 'const char [20]'
+     1>c:\users\am_solnik\desktop\solnik_projectnumber1\main.cpp(6): error C2143: syntax error : missing ';' before '~'
+     1>c:\users\am_solnik\desktop\solnik_projectnumber1\main.cpp(6): warning C4552: '~' : operator has no effect; expected operator with side-effect
+     1>c:\users\am_solnik\desktop\solnik_projectnumber1\main.cpp(6): error C2171: '~' : illegal on operands of type 'const char [19]'
+     1>c:\users\am_solnik\desktop\solnik_projectnumber1\main.cpp(6): warning C4552: '~' : operator has no effect; expected operator with side-effect
+     1>Done Building Project "C:\Users\AM_SOLNIK\Desktop\Solnik_ProjectNumber1\Solnik_ProjectNumber1.vcxproj" (build target(s)) -- FAILED.
+
+Build FAILED.
+
+Time Elapsed 00:00:00.25

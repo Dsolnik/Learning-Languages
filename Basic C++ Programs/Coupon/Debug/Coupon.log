@@ -1,0 +1,13 @@
+﻿Build started 10/5/2015 1:36:50 PM.
+     1>Project "C:\Users\AM_SOLNIK\Desktop\Coupon\Coupon.vcxproj" on node 2 (build target(s)).
+     1>InitializeBuildStatus:
+         Touching "Debug\Coupon.unsuccessfulbuild".
+       ClCompile:
+         c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt Main.cpp
+         Main.cpp
+     1>c:\users\am_solnik\desktop\coupon\main.cpp(2): fatal error C1083: Cannot open include file: 'iosteam': No such file or directory
+     1>Done Building Project "C:\Users\AM_SOLNIK\Desktop\Coupon\Coupon.vcxproj" (build target(s)) -- FAILED.
+
+Build FAILED.
+
+Time Elapsed 00:00:00.21
