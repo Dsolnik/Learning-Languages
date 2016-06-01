@@ -111,4 +111,4 @@ end
 
 tree = Tree.new
 tree.build_tree([1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324])
-puts tree.to_sNext, build a new method dfs_rec which runs a depth first search as before but this time, instead of using a stack, make this method recursive.
+puts tree.to_s
