@@ -20,7 +20,7 @@ while(true)
 	if num<0
 		break
 	end
-	puts ""
+	puts 
 	printArr(fib(num))
 
 end
