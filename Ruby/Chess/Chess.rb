@@ -67,6 +67,7 @@ class Chess_Game
 		for i in pieces
 			valid_move = check_valid_move?(i, coordinate)
 			if valid_move
+				coord = i.xCord, i.yCord
 				@board.move_piece(i, coordinate)
 				@board.output_board
 				return true
@@ -631,10 +632,13 @@ name2 = gets.chomp
 game = Chess_Game.new(name1, name2)
 game.start_game
 play1turn = true
+move_number = 0
 while(true)
 	name = play1turn ? name1 : name2
 	turn = play1turn ? 1 : 2 
 	moved = false
+	move_number += 1
+	puts "Move # #{move_number}"
 	until moved 
 		puts "Enter EXIT to exit"
 		x = gets.chomp
@@ -665,17 +669,9 @@ while(true)
 			y = gets.chomp.to_i
 			valid_input = true if x < 8 && x >= 0 
 		end
-		oldCord = [piece_to_move.xCord, piece_to_move.yCord]
-		success = game.move_piece(piece_to_move, turn, [x, y])
+		success , oldCord = game.move_piece(piece_to_move, turn, [x, y])
 		if success
-			in_check = false unless game.board.get_piece("King", turn)[0].is_in_check?(game.board.pieces)
-			unless in_check 
-				play1turn = !play1turn
-				moved = true
-			else
-				puts "Invalid move! You need to get yourself out of check!\n You'd still be in check if you made that move!"
-				game.move_piece(piece_to_move, turn, oldCord)
-			end
+			moved = true
 		end
 		@board.output_board
 	end
