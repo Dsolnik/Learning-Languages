@@ -35,7 +35,7 @@ class Chess_Game
 		king1 = @board.get_piece("King", 1)[0]
 		king2 = @board.get_piece("King", 2)[0]
 		for king in [king1, king2]
-			if king.is_in_check?(@board.pieces) && !king.can_move?(@board.pieces)
+			if king.is_in_check?(@board.pieces) && !king.can_move?(@board.pieces)  && !king.can_move_or_take?(@board.pieces)
 				puts "Game's Over!"
 				puts king.team == 1 ? player2 + ", you win!" : player1 + ", you win!"
 				gets.chomp
@@ -72,8 +72,7 @@ class Chess_Game
 				return true
 			end
 		end
-		@board.output_board
-		return false
+	return false
 	end
 
 end
@@ -145,7 +144,7 @@ class Board
 			oldy = piece.yCord
 			piece.xCord, piece.yCord = coordinate
 			@pieces[coordinate] = piece.clone()
-			@pieces.delete([oldx,oldy])
+			@pieces[[oldx,oldy]] = nil
 	end
 
 	#returns array of pieces of selected thingy
@@ -233,7 +232,7 @@ class Knight < Piece
 		arrPos << [xCord-1, yCord-2] if check_on_board?(xCord-1, yCord-2) && !pieces.fetch([xCord-1, yCord-2])
 		arrPos << [xCord+1, yCord-2] if check_on_board?(xCord+1, yCord-2) && !pieces.fetch([xCord+1, yCord-2])
 		arrPos << [xCord+1, yCord+2] if check_on_board?(xCord+1, yCord+2) && !pieces.fetch([xCord+1, yCord+2])
-		arrPos
+		return arrPos
 	end	
 
 	def take_moves(pieces)
@@ -247,7 +246,7 @@ class Knight < Piece
 		arrPos << [xCord-1, yCord-2] if check_on_board?(xCord-1, yCord-2) && pieces.fetch([xCord-1, yCord-2])
 		arrPos << [xCord+1, yCord-2] if check_on_board?(xCord+1, yCord-2) && pieces.fetch([xCord+1, yCord-2])
 		arrPos << [xCord+1, yCord+2] if check_on_board?(xCord+1, yCord+2) && pieces.fetch([xCord+1, yCord+2])
-		arrPos
+		return arrPos
 	end
 
 end
@@ -286,7 +285,7 @@ class Castle < Piece
 				break
 			end
 		end
-		for i in xCord+1..7
+		for i in yCord+1..7
 			unless pieces.fetch([xCord, i])
 				arrPos << [xCord,i]
 			else
@@ -294,9 +293,6 @@ class Castle < Piece
 			end
 		end
 		arrPos		
-	end
-
-	def fetch(a)
 	end
 
 	def take_moves(pieces)
@@ -328,7 +324,6 @@ class Castle < Piece
 				break
 			end
 		end
-
 		arrPos						
 	end
 
@@ -570,20 +565,20 @@ class King < Piece
 
 	def is_in_check?(pieces)
 		b = pieces.select{|key,value| value != nil}
-		other_team = b.select { |key, value| value.team == @team}
-		king_can_move_here = false
-		puts other_team.values
+		other_team = b.select { |key, value| value.team != @team}
+		attacked = false
 		other_team.each_value do |piece|
-			poss_takes = piece.take_moves(piece)
-			king_can_move_here = true if poss_takes.include?([xCord,yCord])
+			poss_takes = piece.take_moves(pieces)
+			attacked = true if poss_takes.include?([xCord,yCord])
 		end
+		return attacked
 	end
 
 	def can_move?(pieces)
-		has_moves = false
+		has_moves = false 
 		total_spaces = get_moves(pieces) + take_moves(pieces)
 		b = pieces.select{|key,value| value != nil}
-		other_team = b.select{ |key, value| value.team == @team}.values
+		other_team = b.select{ |key, value| value.team != @team}.values
 		#loop through all possible moves of king
 		for i in total_spaces
 			has_moves = true if can_move_to?(pieces, i)
@@ -605,6 +600,27 @@ class King < Piece
 		true
 	end
 
+	def can_move_or_take?(pieces)
+		#get hash of pieces
+		b = pieces.select{|key,value| value != nil}
+		#get hash of pieces on other team
+		other_team = b.select { |key, value| value.team != @team }
+		this_team = b.select { |key, value| value.team == @team }
+		attacked = false
+		other_team.each_value do |piece|
+			poss_takes = piece.take_moves(pieces)
+			if poss_takes.include?([xCord,yCord])
+				attacking_attacked = false
+					this_team.each_value do |piece|
+						pos_takes = piece.take_moves(pieces)
+						attacking_attacked = true if pos_takes.include?([piece.xCord,piece.yCord])
+					end
+				 attacked = true unless attacking_attacked 
+			end
+		end
+		return attacked
+	end
+
 end
 
 puts "Welcome to Chess!"
@@ -618,17 +634,18 @@ play1turn = true
 while(true)
 	name = play1turn ? name1 : name2
 	turn = play1turn ? 1 : 2 
-	puts "It's " + name + "'s turn!\nYou are player #" + turn.to_s
 	moved = false
 	until moved 
 		puts "Enter EXIT to exit"
 		x = gets.chomp
 		exit if x =="EXIT"
+		in_check = false
+		puts "It's " + name + "'s turn!\nYou are player #" + turn.to_s
 		if game.board.get_piece("King", turn)[0].is_in_check?(game.board.pieces)
 			game.checkmate?
 			puts "You are in Check!"
-			puts "You have to move your king"
-		else			
+			in_check = true
+		end			
 			piece_to_move, x, y = nil, nil, nil
 			valid_input = false
 			until valid_input
@@ -636,7 +653,6 @@ while(true)
 				piece_to_move = gets.chomp
 				valid_input = true if piece_to_move == "Knight" || piece_to_move == "Castle" || piece_to_move == "Bishop" || piece_to_move == "King" || piece_to_move == "Queen" ||  piece_to_move == "Pawn"
 			end
-		end
 		valid_input = false
 		until valid_input
 			puts "What x coordinate would you like to move it to?"
@@ -649,10 +665,18 @@ while(true)
 			y = gets.chomp.to_i
 			valid_input = true if x < 8 && x >= 0 
 		end
-		success = game.move_piece(piece_to_move, play1turn ? 1 : 2, [x, y])
+		oldCord = [piece_to_move.xCord, piece_to_move.yCord]
+		success = game.move_piece(piece_to_move, turn, [x, y])
 		if success
-			play1turn = !play1turn
-			moved = true
+			in_check = false unless game.board.get_piece("King", turn)[0].is_in_check?(game.board.pieces)
+			unless in_check 
+				play1turn = !play1turn
+				moved = true
+			else
+				puts "Invalid move! You need to get yourself out of check!\n You'd still be in check if you made that move!"
+				game.move_piece(piece_to_move, turn, oldCord)
+			end
 		end
+		@board.output_board
 	end
 end
