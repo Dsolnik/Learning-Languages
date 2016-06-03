@@ -32,12 +32,61 @@ class Chess_Game
 		end
 	end
 
+	def castle(team, coordinate)
+		pieces_not_nil = @board.pieces.values.select{ |val| val!=nil }
+		king = pieces_not_nil.select { |val| val.name == "King" && val.team == team }
+		#Castle left
+		if coordinate[0] < 3
+			#get the castle on the same team in the first column
+			castle = pieces_not_nil.select { |val| val.name == "Castle" && val.xCord == 0 && val.team == team }
+			@board.move_piece(castle, [3, castle.yCord], true)
+			@board.move_piece(king, [0, castle.yCord], true)
+		#Castle right
+		else
+			castle = pieces_not_nil.select { |val| val.name == "Castle" && val.xCord == 7 && val.team == team }
+			@board.move_piece(castle, [5, castle.yCord], true)
+			@board.move_piece(king, [6, castle.yCord], true)
+		end
+	end
+
+	def check_castle(team, coordinate)
+		pieces_not_nil = @board.pieces.values.select{ |val| val!=nil }
+		king = pieces_not_nil.select { |val| val.name == "King" && val.team == team }
+		#Castle left
+		if coordinate[0] == 2
+			#get the castle on the same team in the first column
+			castle = pieces_not_nil.select { |val| val.name == "Castle" && val.xCord == 0 && val.team == team }
+			#check that castle hasn't moved and that the 3 adjacent squares are empty
+			if !castle.has_moved && !@board.pieces[[1, castle.yCord]] && !@board.pieces[[2, castle.yCord]] && !@board.pieces[[3, castle.yCord]]
+				return true
+			end
+		#Castle Right
+		elsif coordinate[0] == 6
+			#get the king on the same team in the first column
+			castle = pieces_not_nil.select { |val| val.name == "Castle" && val.xCord == 7 && val.team == team }
+			#check that castle hasn't moved and that the 3 adjacent squares are empty
+			if !castle.has_moved && !@board.pieces[[6, castle.yCord]] && !@board.pieces[[6, castle.yCord]]
+				return true
+			end
+		end
+		return false
+	end
+
 	#returns true if moved piece, false if not
 	def move_piece(piece_name, team, coordinate)
 		pieces = @board.get_pieces(piece_name, team)
 		can_move = []
 		pieces.each do |piece|
 			can_move << piece if @board.can_move?(piece, coordinate)
+		end
+		#CHECK CASTLING
+		if piece_name == "King"
+			unless pieces[0].has_moved 
+				if check_castle(team, coordinate)
+					castle(team, coordinate)
+					return true
+				end
+			end
 		end
 		#if there are no pieces on that team that can move there, return false
 		if can_move.length == 0
@@ -128,7 +177,7 @@ while(true)
 			piece_to_move = gets.chomp
 			valid_input = true if piece_to_move == "Knight" || piece_to_move == "Horse" || piece_to_move == "Castle" || piece_to_move == "Bishop" || piece_to_move == "King" || piece_to_move == "Queen" ||  piece_to_move == "Pawn"
 		end
-		piece_to_move == "Knight" if piece_to_move == "Horse"
+		piece_to_move = "Knight" if piece_to_move == "Horse"
 		valid_input = false
 		until valid_input
 			puts "What x coordinate would you like to move it to?"

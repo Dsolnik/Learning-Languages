@@ -50,16 +50,25 @@ class Board
 	#input:
 	# => piece: object
 	# => coordinate: [xCord, yCord]
-	def move_piece(piece, coordinate)
-		#check if desired coordinate is on board
-		return false unless piece.check_on_board?(coordinate[0], coordinate[1])
-		#move piece to new coordinates and set old coordinate in @pieces to nil
-		return false unless can_move?(piece, coordinate)
-		old_coordinate = [piece.xCord, piece.yCord]
-		piece.xCord, piece.yCord = coordinate
-		@pieces[coordinate] = piece
-		@pieces[old_coordinate] = nil
-		return true
+	def move_piece(piece, coordinate, override = nil)
+		unless override
+			#check if desired coordinate is on board
+			return false unless piece.check_on_board?(coordinate[0], coordinate[1])
+			#move piece to new coordinates and set old coordinate in @pieces to nil
+			return false unless can_move?(piece, coordinate)
+			piece.has_moved = true if piece.name == "King" || piece.name == "Castle"
+			old_coordinate = [piece.xCord, piece.yCord]
+			piece.xCord, piece.yCord = coordinate
+			@pieces[coordinate] = piece
+			@pieces[old_coordinate] = nil
+			return true
+		else
+			piece.has_moved = true if piece.name == "King" || piece.name == "Castle"
+			old_coordinate = [piece.xCord, piece.yCord]
+			piece.xCord, piece.yCord = coordinate
+			@pieces[coordinate] = piece
+			@pieces[old_coordinate] = nil
+		end
 	end
 
 	def can_move?(piece, coordinate)
