@@ -41,7 +41,7 @@ class Chess_Game
 		end
 		#if there are no pieces on that team that can move there, return false
 		if can_move.length == 0
-			puts "RETURNING FALSE!1"
+			#puts "RETURNING FALSE!1"
 			return false
 		#if there are more than 1 piece list all of the pieces and give the option to choose
 		elsif can_move.length >1
@@ -57,13 +57,13 @@ class Chess_Game
 				goodInput = true if @board.move_piece(can_move[index], coordinate)
 				puts "Incorrect input!" unless goodInput
 			end
-			puts "RETURNING TRUE!2"			
+			#puts "RETURNING TRUE!2"			
 			return true
 		#if there's one piece, call the move method
 		elsif can_move.length == 1
 			moved = @board.move_piece(can_move[0], coordinate)
-			puts "RETURNING TRUE!3" if moved
-			puts "RETURNING FALSE!3" if !moved
+			#puts "RETURNING TRUE!3" if moved
+			#puts "RETURNING FALSE!3" if !moved
 			return moved
 		end
 		return false

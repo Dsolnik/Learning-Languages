@@ -11,10 +11,6 @@ class Piece
 		@yCord = yCord
 	end
 
-	def fetch(a)
-
-	end
-
 #NOTE: CONTINUE CASTLING
 	def get_king(pieces, team)
 		pieces_not_nil = @pieces.values.select{ |val| val!=nil }
