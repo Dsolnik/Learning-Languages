@@ -40,7 +40,7 @@ class Chess_Game
 			#get the castle on the same team in the first column
 			castle = pieces_not_nil.select { |val| val.name == "Castle" && val.xCord == 0 && val.team == team }
 			@board.move_piece(castle, [3, castle.yCord], true)
-			@board.move_piece(king, [0, castle.yCord], true)
+			@board.move_piece(king, [2, castle.yCord], true)
 		#Castle right
 		else
 			castle = pieces_not_nil.select { |val| val.name == "Castle" && val.xCord == 7 && val.team == team }
@@ -64,8 +64,8 @@ class Chess_Game
 		elsif coordinate[0] == 6
 			#get the king on the same team in the first column
 			castle = pieces_not_nil.select { |val| val.name == "Castle" && val.xCord == 7 && val.team == team }
-			#check that castle hasn't moved and that the 3 adjacent squares are empty
-			if !castle.has_moved && !@board.pieces[[6, castle.yCord]] && !@board.pieces[[6, castle.yCord]]
+			#check that castle hasn't moved and that the 2 adjacent squares are empty
+			if !castle.has_moved && !@board.pieces[[6, castle.yCord]] && !@board.pieces[[5, castle.yCord]]
 				return true
 			end
 		end
