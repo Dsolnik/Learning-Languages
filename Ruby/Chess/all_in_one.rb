@@ -109,10 +109,11 @@ class Board
 			for j in 0..7
 				if @pieces[[j, i]]
 					print " "
-					print @pieces[[j, i]].name[0] unless @pieces[[j, i]].name == "Knight"
-					print "H" if @pieces[[j, i]].name == "Knight"
-					print @pieces[[j, i]].team
-					print " "
+					print_symbol(@pieces[[j, i]].name, @pieces[[j, i]].team)
+					#print @pieces[[j, i]].name[0] unless @pieces[[j, i]].name == "Knight"
+					#print "H" if @pieces[[j, i]].name == "Knight"
+					#print @pieces[[j, i]].team
+					print "  "
 				else
 					print "    "
 				end
@@ -122,6 +123,38 @@ class Board
 			puts "-------------------------------------------"
 		end
 		puts "  |  0 |  1 |  2 |  3 |  4 |  5 |  6 |  7 |"
+	end
+
+	def print_symbol(name, team)
+		if team == 1
+			if name == "King"
+				print "\u2654"
+			elsif name == "Queen"
+				print "\u2655"
+			elsif name == "Castle"
+				print "\u2656"
+			elsif name == "Bishop"
+				print "\u2657"
+			elsif name == "Knight"
+				print "\u2658"
+			elsif name =="Pawn"
+				print "\u2659"
+			end
+		else
+			if name == "King"
+				print "\u265A"
+			elsif name == "Queen"
+				print "\u265B"
+			elsif name == "Castle"
+				print "\u265C"
+			elsif name == "Bishop"
+				print "\u265D"
+			elsif name == "Knight"
+				print "\u265E"
+			elsif name =="Pawn"
+				print "\u265F"
+			end
+		end
 	end
 
 end
@@ -775,17 +808,21 @@ while(true)
 	end
 	puts "Move # #{move_number}"
 	until moved 
-		print "Enter EXIT to exit:"
-		x = gets.chomp
-		exit if x == "EXIT"
+		#print "Enter EXIT to exit:"
+		#x = gets.chomp
+		#exit if x == "EXIT"
 		in_check = false
 		puts "It's " + name + "'s turn!\nYou are player #" + turn.to_s
 		piece_to_move, x, y = nil, nil, nil
 		valid_input = false
 		until valid_input
-			puts "What piece would you like to move? Your choices are: Knight, Castle, Bishop, King, Queen, Horse or Pawn"
+			puts "What piece would you like to move? Say LIST to list acceptable inputs"
 			piece_to_move = gets.chomp
+			if piece_to_move == "LIST"
+				puts "NOTE: CASE SENSITIVE\nThe options are: Knight, Horse, Castle, Bishop, King, Queen, Pawn"
+			else
 			valid_input = true if piece_to_move == "Knight" || piece_to_move == "Horse" || piece_to_move == "Castle" || piece_to_move == "Bishop" || piece_to_move == "King" || piece_to_move == "Queen" ||  piece_to_move == "Pawn"
+			end
 		end
 		piece_to_move = "Knight" if piece_to_move == "Horse"
 		valid_input = false

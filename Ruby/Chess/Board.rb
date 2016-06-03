@@ -109,10 +109,11 @@ class Board
 			for j in 0..7
 				if @pieces[[j, i]]
 					print " "
-					print @pieces[[j, i]].name[0] unless @pieces[[j, i]].name == "Knight"
-					print "H" if @pieces[[j, i]].name == "Knight"
-					print @pieces[[j, i]].team
-					print " "
+					print_symbol(@pieces[[j, i]].name, @pieces[[j, i]].team)
+					#print @pieces[[j, i]].name[0] unless @pieces[[j, i]].name == "Knight"
+					#print "H" if @pieces[[j, i]].name == "Knight"
+					#print @pieces[[j, i]].team
+					print "  "
 				else
 					print "    "
 				end
@@ -122,6 +123,38 @@ class Board
 			puts "-------------------------------------------"
 		end
 		puts "  |  0 |  1 |  2 |  3 |  4 |  5 |  6 |  7 |"
+	end
+
+	def print_symbol(name, team)
+		if team == 1
+			if name == "King"
+				print "\u2654"
+			elsif name == "Queen"
+				print "\u2655"
+			elsif name == "Castle"
+				print "\u2656"
+			elsif name == "Bishop"
+				print "\u2657"
+			elsif name == "Knight"
+				print "\u2658"
+			elsif name =="Pawn"
+				print "\u2659"
+			end
+		else
+			if name == "King"
+				print "\u265A"
+			elsif name == "Queen"
+				print "\u265B"
+			elsif name == "Castle"
+				print "\u265C"
+			elsif name == "Bishop"
+				print "\u265D"
+			elsif name == "Knight"
+				print "\u265E"
+			elsif name =="Pawn"
+				print "\u265F"
+			end
+		end
 	end
 
 end

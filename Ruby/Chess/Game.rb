@@ -165,17 +165,21 @@ while(true)
 	end
 	puts "Move # #{move_number}"
 	until moved 
-		print "Enter EXIT to exit:"
-		x = gets.chomp
-		exit if x == "EXIT"
+		#print "Enter EXIT to exit:"
+		#x = gets.chomp
+		#exit if x == "EXIT"
 		in_check = false
 		puts "It's " + name + "'s turn!\nYou are player #" + turn.to_s
 		piece_to_move, x, y = nil, nil, nil
 		valid_input = false
 		until valid_input
-			puts "What piece would you like to move? Your choices are: Knight, Castle, Bishop, King, Queen, Horse or Pawn"
+			puts "What piece would you like to move? Say LIST to list acceptable inputs"
 			piece_to_move = gets.chomp
+			if piece_to_move == "LIST"
+				puts "NOTE: CASE SENSITIVE\nThe options are: Knight, Horse, Castle, Bishop, King, Queen, Pawn"
+			else
 			valid_input = true if piece_to_move == "Knight" || piece_to_move == "Horse" || piece_to_move == "Castle" || piece_to_move == "Bishop" || piece_to_move == "King" || piece_to_move == "Queen" ||  piece_to_move == "Pawn"
+			end
 		end
 		piece_to_move = "Knight" if piece_to_move == "Horse"
 		valid_input = false
