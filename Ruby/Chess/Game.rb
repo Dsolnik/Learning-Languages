@@ -188,7 +188,7 @@ end
 
 game = nil
 input = nil
-puts "Welcome to Chess!"
+puts "Welcome to Chess!This version of the game supports castling & pawn promotion"
 until input
 	puts "Would you like to load or start a new game? Enter \"Load\" to load or \"Start\" to start"
 	input = gets.chomp.capitalize
