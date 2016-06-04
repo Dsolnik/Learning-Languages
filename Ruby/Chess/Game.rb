@@ -8,11 +8,12 @@ require_relative 'Queen'
 require_relative 'King'
 class Chess_Game
 	
-	attr_accessor :player1, :player2, :board
+	attr_accessor :player1, :player2, :board, :move_number
 	
 	def initialize (name1, name2)
 		@player1 = name1
 		@player2 = name2
+		@move_number = 1
 	end
 
 	def start_game
@@ -34,16 +35,16 @@ class Chess_Game
 
 	def castle(team, coordinate)
 		pieces_not_nil = @board.pieces.values.select{ |val| val!=nil }
-		king = pieces_not_nil.select { |val| val.name == "King" && val.team == team }
+		king = pieces_not_nil.select { |val| val.name == "King" && val.team == team }[0]
 		#Castle left
 		if coordinate[0] < 3
 			#get the castle on the same team in the first column
-			castle = pieces_not_nil.select { |val| val.name == "Castle" && val.xCord == 0 && val.team == team }
+			castle = pieces_not_nil.select { |val| val.name == "Castle" && val.xCord == 0 && val.team == team }[0]
 			@board.move_piece(castle, [3, castle.yCord], true)
 			@board.move_piece(king, [2, castle.yCord], true)
 		#Castle right
 		else
-			castle = pieces_not_nil.select { |val| val.name == "Castle" && val.xCord == 7 && val.team == team }
+			castle = pieces_not_nil.select { |val| val.name == "Castle" && val.xCord == 7 && val.team == team }[0]
 			@board.move_piece(castle, [5, castle.yCord], true)
 			@board.move_piece(king, [6, castle.yCord], true)
 		end
@@ -51,11 +52,11 @@ class Chess_Game
 
 	def check_castle(team, coordinate)
 		pieces_not_nil = @board.pieces.values.select{ |val| val!=nil }
-		king = pieces_not_nil.select { |val| val.name == "King" && val.team == team }
+		king = pieces_not_nil.select { |val| val.name == "King" && val.team == team }[0]
 		#Castle left
 		if coordinate[0] == 2
 			#get the castle on the same team in the first column
-			castle = pieces_not_nil.select { |val| val.name == "Castle" && val.xCord == 0 && val.team == team }
+			castle = pieces_not_nil.select { |val| val.name == "Castle" && val.xCord == 0 && val.team == team }[0]
 			#check that castle hasn't moved and that the 3 adjacent squares are empty
 			if !castle.has_moved && !@board.pieces[[1, castle.yCord]] && !@board.pieces[[2, castle.yCord]] && !@board.pieces[[3, castle.yCord]]
 				return true
@@ -63,7 +64,7 @@ class Chess_Game
 		#Castle Right
 		elsif coordinate[0] == 6
 			#get the king on the same team in the first column
-			castle = pieces_not_nil.select { |val| val.name == "Castle" && val.xCord == 7 && val.team == team }
+			castle = pieces_not_nil.select { |val| val.name == "Castle" && val.xCord == 7 && val.team == team }[0]
 			#check that castle hasn't moved and that the 2 adjacent squares are empty
 			if !castle.has_moved && !@board.pieces[[6, castle.yCord]] && !@board.pieces[[5, castle.yCord]]
 				return true
@@ -139,23 +140,79 @@ class Chess_Game
 		true
 	end
 
+	def check_promotion(turn)
+		pieces_not_nil = @board.pieces.values.select{ |val| val!=nil }
+		team_pawns = nil
+		if turn == 1
+			team_pawns = pieces_not_nil.select { |val| val.team == turn && val.name == "Pawn" && val.yCord == 7}
+		else
+			team_pawns = pieces_not_nil.select { |val| val.team == turn && val.name == "Pawn" && val.yCord == 0}
+		end
+		if team_pawns.length > 0
+			piece_to_move = nil
+			team_pawns_to_promote.each do |pawn|
+				until piece_to_move == "Knight" || piece_to_move == "Horse" || piece_to_move == "Castle" || piece_to_move == "Bishop" || piece_to_move == "Queen" 
+					puts "What piece would you like to replace the pawn at [#{pawn.xCord}, #{pawn.yCord}]? Note: pick something other than a pawn"
+					piece_to_move = gets.chomp			
+				end
+				piece_to_move = "Knight" if piece_to_move == "Horse"
+				x, y = pawn.xCord, pawn.yCord
+				@board.delete_piece(pawn)
+				case piece_to_move
+				when "Knight"
+					@board.add_piece(Knight.new(turn, @board, x, y))
+				when "Castle"
+					@board.add_piece(Castle.new(turn, @board, x, y))		
+				when "Bishop"
+					@board.add_piece(Bishop.new(turn, @board, x, y))
+				when "Queen"
+					@board.add_piece(Queen.new(turn, @board, x, y))
+				end
+			end
+		end
+	end
+
 end
 
+#--------------------------------------------------------------------------------------------------
+require 'yaml'
+def load_game
+	YAML::load(File.readlines("game.yaml").join)
+end
 
+def save_game(game)
+	File.open("game.yaml" , "w") do |file|
+		file.puts YAML::dump(game)
+	end
+end
+
+game = nil
+input = nil
 puts "Welcome to Chess!"
-puts "What is the name of Player1?"
-name1 = gets.chomp
-puts "What is the name of Player2?"
-name2 = gets.chomp
-game = Chess_Game.new(name1, name2)
-game.start_game
-play1turn = true
-move_number = 0
-while(true)
-	name = play1turn ? name1 : name2
+until input
+	puts "Would you like to load or start a new game? Enter \"Load\" to load or \"Start\" to start"
+	input = gets.chomp.capitalize
+	input = nil unless input == "Load" || input == "Start"
+end
+if input == "Start"
+	puts "What is the name of Player1?"
+	name1 = gets.chomp
+	puts "What is the name of Player2?"
+	name2 = gets.chomp
+	game = Chess_Game.new(name1, name2)
+	input = nil
+	game.start_game
+	play1turn = true
+else
+	game = load_game()
+	game.board.output_board
+end
+
+while(true)	
+	play1turn = game.move_number % 2 == 1
+	name = play1turn ? game.player1 : game.player2
 	turn = play1turn ? 1 : 2 
 	moved = false
-	move_number += 1
 	if game.checkmate?
 		puts "Congratulations! " + game.checkmate? + ", you have won!"
 		exit
@@ -163,19 +220,23 @@ while(true)
 		puts "The game ended in a tie!"
 		exit
 	end
-	puts "Move # #{move_number}"
+	puts "Move # #{game.move_number}"
 	until moved 
-		#print "Enter EXIT to exit:"
-		#x = gets.chomp
-		#exit if x == "EXIT"
+		print "Enter EXIT to exit or SAVE to save:"
+		x = gets.chomp.capitalize
+		exit if x == "Exit"
+		if x == "Save"
+			save_game(game) 
+			exit
+		end
 		in_check = false
 		puts "It's " + name + "'s turn!\nYou are player #" + turn.to_s
 		piece_to_move, x, y = nil, nil, nil
 		valid_input = false
 		until valid_input
 			puts "What piece would you like to move? Say LIST to list acceptable inputs"
-			piece_to_move = gets.chomp
-			if piece_to_move == "LIST"
+			piece_to_move = gets.chomp.capitalize
+			if piece_to_move == "List"
 				puts "NOTE: CASE SENSITIVE\nThe options are: Knight, Horse, Castle, Bishop, King, Queen, Pawn"
 			else
 			valid_input = true if piece_to_move == "Knight" || piece_to_move == "Horse" || piece_to_move == "Castle" || piece_to_move == "Bishop" || piece_to_move == "King" || piece_to_move == "Queen" ||  piece_to_move == "Pawn"
@@ -197,8 +258,9 @@ while(true)
 		success = game.move_piece(piece_to_move, turn, [x, y])
 		if success
 			moved = true
-			play1turn = !play1turn
 		end
-		game.board.output_board
+		game.check_promotion(turn) if moved
+		game.board.output_board	
+		game.move_number += 1
 	end
 end

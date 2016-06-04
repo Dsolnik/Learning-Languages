@@ -45,6 +45,11 @@ class Board
 		@pieces[coordinate] = piece
 	end
 
+	def delete_piece(piece)
+		coordinate = [piece.xCord, piece.yCord]
+		@pieces[coordinate] = nil
+	end
+
 	#returns true if it moved or false if the coordinate isn't on board or the piece isn't allowed to move there
 	#because of the rules of movement of the piece or it would be in check
 	#input:
@@ -155,6 +160,15 @@ class Board
 				print "\u265F"
 			end
 		end
+	end
+
+	def square_not_under_attack?(pieces, team, coordinate)
+		pieces_not_nil = pieces.values.select{ |val| val!=nil }
+		other_team = pieces_not_nil.select { |val| val.team == team }
+		other_team.each do |piece|
+			return false if piece.take_moves(pieces).include?(coordinate)
+		end
+		true
 	end
 
 end
